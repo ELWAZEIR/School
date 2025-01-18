@@ -1,6 +1,6 @@
-const mongoose = require("mongoose")
+import { Schema, model } from "mongoose";
 
-const noticeSchema = new mongoose.Schema({
+const noticeSchema = new Schema({
     title: {
         type: String,
         required: true
@@ -14,9 +14,9 @@ const noticeSchema = new mongoose.Schema({
         required: true
     },
     school: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'admin'
     },
 }, { timestamps: true });
 
-module.exports = mongoose.model("notice", noticeSchema)
+export default model("notice", noticeSchema)

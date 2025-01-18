@@ -1,11 +1,10 @@
-const bcrypt = require('bcrypt');
-const Student = require('../models/studentSchema.js');
-const Subject = require('../models/subjectSchema.js');
+import { genSalt, hash, compare } from 'bcrypt';
+import Student from '../models/studentSchema.js';
 
-const studentRegister = async (req, res) => {
+export const studentRegister = async (req, res) => {
     try {
-        const salt = await bcrypt.genSalt(10);
-        const hashedPass = await bcrypt.hash(req.body.password, salt);
+        const salt = await genSalt(10);
+        const hashedPass = await hash(req.body.password, salt);
 
         const existingStudent = await Student.findOne({
             rollNum: req.body.rollNum,
@@ -33,11 +32,11 @@ const studentRegister = async (req, res) => {
     }
 };
 
-const studentLogIn = async (req, res) => {
+export const studentLogIn = async (req, res) => {
     try {
         let student = await Student.findOne({ rollNum: req.body.rollNum, name: req.body.studentName });
         if (student) {
-            const validated = await bcrypt.compare(req.body.password, student.password);
+            const validated = await compare(req.body.password, student.password);
             if (validated) {
                 student = await student.populate("school", "schoolName")
                 student = await student.populate("sclassName", "sclassName")
@@ -56,9 +55,11 @@ const studentLogIn = async (req, res) => {
     }
 };
 
-const getStudents = async (req, res) => {
+export const getStudents = async (req, res) => {
     try {
-        let students = await Student.find({ school: req.params.id }).populate("sclassName", "sclassName");
+        
+        let students = await Student.find({ sclassName: req.params.id }).populate("sclassName", "sclassName");
+        
         if (students.length > 0) {
             let modifiedStudents = students.map((student) => {
                 return { ...student._doc, password: undefined };
@@ -72,7 +73,23 @@ const getStudents = async (req, res) => {
     }
 };
 
-const getStudentDetail = async (req, res) => {
+export const getAllStudents = async (req, res) => {
+    try {
+        
+        let students = await Student.find()
+
+        if (students.length > 0) {
+           
+            res.send(students);
+        } else {
+            res.send({ message: "No students number" });
+        }
+    } catch (err) {
+        res.status(500).json(err);
+    }
+};
+
+export const getStudentDetail = async (req, res) => {
     try {
         let student = await Student.findById(req.params.id)
             .populate("school", "schoolName")
@@ -91,7 +108,7 @@ const getStudentDetail = async (req, res) => {
     }
 }
 
-const deleteStudent = async (req, res) => {
+export const deleteStudent = async (req, res) => {
     try {
         const result = await Student.findByIdAndDelete(req.params.id)
         res.send(result)
@@ -100,7 +117,7 @@ const deleteStudent = async (req, res) => {
     }
 }
 
-const deleteStudents = async (req, res) => {
+export const deleteStudents = async (req, res) => {
     try {
         const result = await Student.deleteMany({ school: req.params.id })
         if (result.deletedCount === 0) {
@@ -113,7 +130,7 @@ const deleteStudents = async (req, res) => {
     }
 }
 
-const deleteStudentsByClass = async (req, res) => {
+export const deleteStudentsByClass = async (req, res) => {
     try {
         const result = await Student.deleteMany({ sclassName: req.params.id })
         if (result.deletedCount === 0) {
@@ -126,11 +143,11 @@ const deleteStudentsByClass = async (req, res) => {
     }
 }
 
-const updateStudent = async (req, res) => {
+export const updateStudent = async (req, res) => {
     try {
         if (req.body.password) {
-            const salt = await bcrypt.genSalt(10)
-            res.body.password = await bcrypt.hash(res.body.password, salt)
+            const salt = await genSalt(10)
+            res.body.password = await hash(res.body.password, salt)
         }
         let result = await Student.findByIdAndUpdate(req.params.id,
             { $set: req.body },
@@ -143,7 +160,7 @@ const updateStudent = async (req, res) => {
     }
 }
 
-const updateExamResult = async (req, res) => {
+export const updateExamResult = async (req, res) => {
     const { subName, marksObtained } = req.body;
 
     try {
@@ -170,7 +187,7 @@ const updateExamResult = async (req, res) => {
     }
 };
 
-const studentAttendance = async (req, res) => {
+export const studentAttendance = async (req, res) => {
     const { subName, status, date } = req.body;
 
     try {
@@ -180,7 +197,7 @@ const studentAttendance = async (req, res) => {
             return res.send({ message: 'Student not found' });
         }
 
-        const subject = await Subject.findById(subName);
+        const subject = await Student.findById(subName);
 
         const existingAttendance = student.attendance.find(
             (a) =>
@@ -210,7 +227,7 @@ const studentAttendance = async (req, res) => {
     }
 };
 
-const clearAllStudentsAttendanceBySubject = async (req, res) => {
+export const clearAllStudentsAttendanceBySubject = async (req, res) => {
     const subName = req.params.id;
 
     try {
@@ -224,7 +241,7 @@ const clearAllStudentsAttendanceBySubject = async (req, res) => {
     }
 };
 
-const clearAllStudentsAttendance = async (req, res) => {
+export const clearAllStudentsAttendance = async (req, res) => {
     const schoolId = req.params.id
 
     try {
@@ -239,7 +256,7 @@ const clearAllStudentsAttendance = async (req, res) => {
     }
 };
 
-const removeStudentAttendanceBySubject = async (req, res) => {
+export const removeStudentAttendanceBySubject = async (req, res) => {
     const studentId = req.params.id;
     const subName = req.body.subId
 
@@ -256,7 +273,7 @@ const removeStudentAttendanceBySubject = async (req, res) => {
 };
 
 
-const removeStudentAttendance = async (req, res) => {
+export const removeStudentAttendance = async (req, res) => {
     const studentId = req.params.id;
 
     try {
@@ -271,21 +288,3 @@ const removeStudentAttendance = async (req, res) => {
     }
 };
 
-
-module.exports = {
-    studentRegister,
-    studentLogIn,
-    getStudents,
-    getStudentDetail,
-    deleteStudents,
-    deleteStudent,
-    updateStudent,
-    studentAttendance,
-    deleteStudentsByClass,
-    updateExamResult,
-
-    clearAllStudentsAttendanceBySubject,
-    clearAllStudentsAttendance,
-    removeStudentAttendanceBySubject,
-    removeStudentAttendance,
-};

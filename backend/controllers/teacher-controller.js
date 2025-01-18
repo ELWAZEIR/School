@@ -1,12 +1,11 @@
-const bcrypt = require('bcrypt');
-const Teacher = require('../models/teacherSchema.js');
-const Subject = require('../models/subjectSchema.js');
+import { genSalt, hash, compare } from 'bcrypt';
+import Teacher from '../models/teacherSchema.js';
 
-const teacherRegister = async (req, res) => {
+export const teacherRegister = async (req, res) => {
     const { name, email, password, role, school, teachSubject, teachSclass } = req.body;
     try {
-        const salt = await bcrypt.genSalt(10);
-        const hashedPass = await bcrypt.hash(password, salt);
+        const salt = await genSalt(10);
+        const hashedPass = await hash(password, salt);
 
         const teacher = new Teacher({ name, email, password: hashedPass, role, school, teachSubject, teachSclass });
 
@@ -17,7 +16,7 @@ const teacherRegister = async (req, res) => {
         }
         else {
             let result = await teacher.save();
-            await Subject.findByIdAndUpdate(teachSubject, { teacher: teacher._id });
+            await _findByIdAndUpdate(teachSubject, { teacher: teacher._id });
             result.password = undefined;
             res.send(result);
         }
@@ -26,11 +25,11 @@ const teacherRegister = async (req, res) => {
     }
 };
 
-const teacherLogIn = async (req, res) => {
+export const teacherLogIn = async (req, res) => {
     try {
         let teacher = await Teacher.findOne({ email: req.body.email });
         if (teacher) {
-            const validated = await bcrypt.compare(req.body.password, teacher.password);
+            const validated = await compare(req.body.password, teacher.password);
             if (validated) {
                 teacher = await teacher.populate("teachSubject", "subName sessions")
                 teacher = await teacher.populate("school", "schoolName")
@@ -48,7 +47,7 @@ const teacherLogIn = async (req, res) => {
     }
 };
 
-const getTeachers = async (req, res) => {
+export const getTeachers = async (req, res) => {
     try {
         let teachers = await Teacher.find({ school: req.params.id })
             .populate("teachSubject", "subName")
@@ -66,7 +65,7 @@ const getTeachers = async (req, res) => {
     }
 };
 
-const getTeacherDetail = async (req, res) => {
+export const getTeacherDetail = async (req, res) => {
     try {
         let teacher = await Teacher.findById(req.params.id)
             .populate("teachSubject", "subName sessions")
@@ -84,7 +83,7 @@ const getTeacherDetail = async (req, res) => {
     }
 }
 
-const updateTeacherSubject = async (req, res) => {
+export const updateTeacherSubject = async (req, res) => {
     const { teacherId, teachSubject } = req.body;
     try {
         const updatedTeacher = await Teacher.findByIdAndUpdate(
@@ -93,7 +92,7 @@ const updateTeacherSubject = async (req, res) => {
             { new: true }
         );
 
-        await Subject.findByIdAndUpdate(teachSubject, { teacher: updatedTeacher._id });
+        await Teacher.findByIdAndUpdate(teachSubject, { teacher: updatedTeacher._id });
 
         res.send(updatedTeacher);
     } catch (error) {
@@ -101,11 +100,11 @@ const updateTeacherSubject = async (req, res) => {
     }
 };
 
-const deleteTeacher = async (req, res) => {
+export const deleteTeacher = async (req, res) => {
     try {
         const deletedTeacher = await Teacher.findByIdAndDelete(req.params.id);
 
-        await Subject.updateOne(
+        await Teacher.updateOne(
             { teacher: deletedTeacher._id, teacher: { $exists: true } },
             { $unset: { teacher: 1 } }
         );
@@ -116,7 +115,7 @@ const deleteTeacher = async (req, res) => {
     }
 };
 
-const deleteTeachers = async (req, res) => {
+export const deleteTeachers = async (req, res) => {
     try {
         const deletionResult = await Teacher.deleteMany({ school: req.params.id });
 
@@ -129,7 +128,7 @@ const deleteTeachers = async (req, res) => {
 
         const deletedTeachers = await Teacher.find({ school: req.params.id });
 
-        await Subject.updateMany(
+        await Teacher.updateMany(
             { teacher: { $in: deletedTeachers.map(teacher => teacher._id) }, teacher: { $exists: true } },
             { $unset: { teacher: "" }, $unset: { teacher: null } }
         );
@@ -140,7 +139,7 @@ const deleteTeachers = async (req, res) => {
     }
 };
 
-const deleteTeachersByClass = async (req, res) => {
+export const deleteTeachersByClass = async (req, res) => {
     try {
         const deletionResult = await Teacher.deleteMany({ sclassName: req.params.id });
 
@@ -153,7 +152,7 @@ const deleteTeachersByClass = async (req, res) => {
 
         const deletedTeachers = await Teacher.find({ sclassName: req.params.id });
 
-        await Subject.updateMany(
+        await updateMany(
             { teacher: { $in: deletedTeachers.map(teacher => teacher._id) }, teacher: { $exists: true } },
             { $unset: { teacher: "" }, $unset: { teacher: null } }
         );
@@ -164,7 +163,7 @@ const deleteTeachersByClass = async (req, res) => {
     }
 };
 
-const teacherAttendance = async (req, res) => {
+export const teacherAttendance = async (req, res) => {
     const { status, date } = req.body;
 
     try {
@@ -192,14 +191,3 @@ const teacherAttendance = async (req, res) => {
     }
 };
 
-module.exports = {
-    teacherRegister,
-    teacherLogIn,
-    getTeachers,
-    getTeacherDetail,
-    updateTeacherSubject,
-    deleteTeacher,
-    deleteTeachers,
-    deleteTeachersByClass,
-    teacherAttendance
-};

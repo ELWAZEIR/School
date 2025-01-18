@@ -1,8 +1,4 @@
-const Subject = require('../models/subjectSchema.js');
-const Teacher = require('../models/teacherSchema.js');
-const Student = require('../models/studentSchema.js');
-
-const subjectCreate = async (req, res) => {
+export const subjectCreate = async (req, res) => {
     try {
         const subjects = req.body.subjects.map((subject) => ({
             subName: subject.subName,
@@ -10,7 +6,7 @@ const subjectCreate = async (req, res) => {
             sessions: subject.sessions,
         }));
 
-        const existingSubjectBySubCode = await Subject.findOne({
+        const existingSubjectBySubCode = await findOne({
             'subjects.subCode': subjects[0].subCode,
             school: req.body.adminID,
         });
@@ -24,7 +20,7 @@ const subjectCreate = async (req, res) => {
                 school: req.body.adminID,
             }));
 
-            const result = await Subject.insertMany(newSubjects);
+            const result = await insertMany(newSubjects);
             res.send(result);
         }
     } catch (err) {
@@ -32,9 +28,9 @@ const subjectCreate = async (req, res) => {
     }
 };
 
-const allSubjects = async (req, res) => {
+export const allSubjects = async (req, res) => {
     try {
-        let subjects = await Subject.find({ school: req.params.id })
+        let subjects = await find({ school: req.params.id })
             .populate("sclassName", "sclassName")
         if (subjects.length > 0) {
             res.send(subjects)
@@ -46,9 +42,9 @@ const allSubjects = async (req, res) => {
     }
 };
 
-const classSubjects = async (req, res) => {
+export const classSubjects = async (req, res) => {
     try {
-        let subjects = await Subject.find({ sclassName: req.params.id })
+        let subjects = await find({ sclassName: req.params.id })
         if (subjects.length > 0) {
             res.send(subjects)
         } else {
@@ -59,9 +55,9 @@ const classSubjects = async (req, res) => {
     }
 };
 
-const freeSubjectList = async (req, res) => {
+export const freeSubjectList = async (req, res) => {
     try {
-        let subjects = await Subject.find({ sclassName: req.params.id, teacher: { $exists: false } });
+        let subjects = await find({ sclassName: req.params.id, teacher: { $exists: false } });
         if (subjects.length > 0) {
             res.send(subjects);
         } else {
@@ -72,9 +68,9 @@ const freeSubjectList = async (req, res) => {
     }
 };
 
-const getSubjectDetail = async (req, res) => {
+export const getSubjectDetail = async (req, res) => {
     try {
-        let subject = await Subject.findById(req.params.id);
+        let subject = await findById(req.params.id);
         if (subject) {
             subject = await subject.populate("sclassName", "sclassName")
             subject = await subject.populate("teacher", "name")
@@ -88,24 +84,24 @@ const getSubjectDetail = async (req, res) => {
     }
 }
 
-const deleteSubject = async (req, res) => {
+export const deleteSubject = async (req, res) => {
     try {
-        const deletedSubject = await Subject.findByIdAndDelete(req.params.id);
+        const deletedSubject = await findByIdAndDelete(req.params.id);
 
         // Set the teachSubject field to null in teachers
-        await Teacher.updateOne(
+        await updateOne(
             { teachSubject: deletedSubject._id },
             { $unset: { teachSubject: "" }, $unset: { teachSubject: null } }
         );
 
         // Remove the objects containing the deleted subject from students' examResult array
-        await Student.updateMany(
+        await _updateMany(
             {},
             { $pull: { examResult: { subName: deletedSubject._id } } }
         );
 
         // Remove the objects containing the deleted subject from students' attendance array
-        await Student.updateMany(
+        await _updateMany(
             {},
             { $pull: { attendance: { subName: deletedSubject._id } } }
         );
@@ -116,18 +112,18 @@ const deleteSubject = async (req, res) => {
     }
 };
 
-const deleteSubjects = async (req, res) => {
+export const deleteSubjects = async (req, res) => {
     try {
-        const deletedSubjects = await Subject.deleteMany({ school: req.params.id });
+        const deletedSubjects = await deleteMany({ school: req.params.id });
 
         // Set the teachSubject field to null in teachers
-        await Teacher.updateMany(
+        await updateMany(
             { teachSubject: { $in: deletedSubjects.map(subject => subject._id) } },
             { $unset: { teachSubject: "" }, $unset: { teachSubject: null } }
         );
 
         // Set examResult and attendance to null in all students
-        await Student.updateMany(
+        await _updateMany(
             {},
             { $set: { examResult: null, attendance: null } }
         );
@@ -138,18 +134,18 @@ const deleteSubjects = async (req, res) => {
     }
 };
 
-const deleteSubjectsByClass = async (req, res) => {
+export const deleteSubjectsByClass = async (req, res) => {
     try {
-        const deletedSubjects = await Subject.deleteMany({ sclassName: req.params.id });
+        const deletedSubjects = await deleteMany({ sclassName: req.params.id });
 
         // Set the teachSubject field to null in teachers
-        await Teacher.updateMany(
+        await updateMany(
             { teachSubject: { $in: deletedSubjects.map(subject => subject._id) } },
             { $unset: { teachSubject: "" }, $unset: { teachSubject: null } }
         );
 
         // Set examResult and attendance to null in all students
-        await Student.updateMany(
+        await _updateMany(
             {},
             { $set: { examResult: null, attendance: null } }
         );
@@ -160,5 +156,3 @@ const deleteSubjectsByClass = async (req, res) => {
     }
 };
 
-
-module.exports = { subjectCreate, freeSubjectList, classSubjects, getSubjectDetail, deleteSubjectsByClass, deleteSubjects, deleteSubject, allSubjects };
