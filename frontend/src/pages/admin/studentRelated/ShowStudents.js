@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
-import { getAllStudents } from '../../../redux/studentRelated/studentHandle';
-import { deleteUser } from '../../../redux/userRelated/userHandle';
+import {  getStudentsNum } from '../../../redux/studentRelated/studentHandle';
 import {
     Paper, Box, IconButton
 } from '@mui/material';
@@ -32,7 +31,7 @@ const ShowStudents = () => {
     const { currentUser } = useSelector(state => state.user)
 
     useEffect(() => {
-        dispatch(getAllStudents(currentUser._id));
+        dispatch(getStudentsNum(currentUser._id));
     }, [currentUser._id, dispatch]);
 
     if (error) {

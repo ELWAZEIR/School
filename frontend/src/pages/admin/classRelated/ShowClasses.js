@@ -55,8 +55,10 @@ const ShowClasses = () => {
     return {
       name: sclass.sclassName,
       id: sclass._id,
+      
     };
   })
+  console.log(sclassesList);
 
   const SclassButtonHaver = ({ row }) => {
     const actions = [

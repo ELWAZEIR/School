@@ -9,7 +9,7 @@ import CountUp from 'react-countup';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { getAllSclasses } from '../../redux/sclassRelated/sclassHandle';
-import { getAllStudents } from '../../redux/studentRelated/studentHandle';
+import { getStudentsNum } from '../../redux/studentRelated/studentHandle';
 import { getAllTeachers } from '../../redux/teacherRelated/teacherHandle';
 
 const AdminHomePage = () => {
@@ -23,14 +23,19 @@ const AdminHomePage = () => {
     const adminID = currentUser._id
 
     useEffect(() => {
-        dispatch(getAllStudents(adminID));
+        dispatch(getStudentsNum(adminID));
         dispatch(getAllSclasses(adminID, "Sclass"));
         dispatch(getAllTeachers(adminID));
     }, [adminID, dispatch]);
 
+    console.log(studentsList,"studentsList");
+    
     const numberOfStudents = studentsList && studentsList.length;
     const numberOfClasses = sclassesList && sclassesList.length;
     const numberOfTeachers = teachersList && teachersList.length;
+    console.log(numberOfStudents,"stdent");
+
+    
 
     return (
         <>
