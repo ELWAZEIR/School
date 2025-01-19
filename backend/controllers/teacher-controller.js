@@ -16,7 +16,7 @@ export const teacherRegister = async (req, res) => {
         }
         else {
             let result = await teacher.save();
-            await _findByIdAndUpdate(teachSubject, { teacher: teacher._id });
+            await Teacher.findByIdAndUpdate(teachSubject, { teacher: teacher._id });
             result.password = undefined;
             res.send(result);
         }

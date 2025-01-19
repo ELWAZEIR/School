@@ -35,7 +35,7 @@ router.post('/StudentLogin', Student.studentLogIn)
 router.get("/Students/:id", Student.getStudents)
 router.get("/Student/:id", Student.getStudentDetail)
 router.get("/StudentsCount", Student.getAllStudents)
- 
+
 router.delete("/Students/:id", Student.deleteStudents)
 router.delete("/StudentsClass/:id", Student.deleteStudentsByClass)
 router.delete("/Student/:id", Student.deleteStudent)

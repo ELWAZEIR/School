@@ -59,6 +59,7 @@ export const getStudents = async (req, res) => {
     try {
         
         let students = await Student.find({ sclassName: req.params.id }).populate("sclassName", "sclassName");
+        console.log(students);
         
         if (students.length > 0) {
             let modifiedStudents = students.map((student) => {
@@ -66,6 +67,7 @@ export const getStudents = async (req, res) => {
             });
             res.send(modifiedStudents);
         } else {
+            
             res.send({ message: "No students found" });
         }
     } catch (err) {
@@ -82,7 +84,7 @@ export const getAllStudents = async (req, res) => {
            
             res.send(students);
         } else {
-            res.send({ message: "No students number" });
+            res.send({ message: "No students " });
         }
     } catch (err) {
         res.status(500).json(err);

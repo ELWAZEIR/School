@@ -40,9 +40,9 @@ export const sclassList = async (req, res) => {
 
 export const getSclassDetail = async (req, res) => {
     try {
+        
         let sclass = await Sclass.findById(req.params.id);
         if (sclass) {
-            sclass = await populate("school", "schoolName")
             res.send(sclass);
         }
         else {
