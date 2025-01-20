@@ -42,7 +42,7 @@ const AdminDashboard = () => {
         <div className="mt-16">
             <div className="flex">
                 {/* AppBar */}
-                <div className={`fixed top-[135px] left-0 right-0 z-10 bg-blue-500 text-white shadow-md transition-all duration-200 ${open ? 'ml-[168px]' : 'ml-0'}`}>
+                <div className={`fixed top-0 left-0 right-0 z-10 bg-blue-500 text-white shadow-md transition-all duration-200 ${open ? 'ml-[168px]' : 'ml-0'}`}>
                     <div className="flex items-center justify-between p-4">
                         <button
                             onClick={toggleDrawer}
@@ -56,7 +56,7 @@ const AdminDashboard = () => {
                 </div>
 
                 {/* Drawer */}
-                <div className={`fixed top-0 left-0 h-full mt-[135px] bg-white shadow-lg transform transition-transform duration-200 ease-in-out ${open ? 'translate-x-0' : '-translate-x-full'}`}>
+                <div className={`fixed top-0 left-0 h-full mt-0 bg-white shadow-lg transform transition-transform duration-200 ease-in-out ${open ? 'translate-x-0' : '-translate-x-full'}`}>
                     <div className="flex items-center justify-end p-2">
                         <button onClick={toggleDrawer} className="p-4 hover:bg-gray-100 rounded">
                             <ChevronLeftIcon />

@@ -1,13 +1,10 @@
-import { Container, Grid, Paper } from '@mui/material'
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import CountUp from 'react-countup';
 import SeeNotice from '../../components/SeeNotice';
 import Students from "../../assets/img1.png";
 import Classes from "../../assets/img2.png";
 import Teachers from "../../assets/img3.png";
-import Fees from "../../assets/img4.png";
-import styled from 'styled-components';
-import CountUp from 'react-countup';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
 import { getAllSclasses } from '../../redux/sclassRelated/sclassHandle';
 import { getAllStudents } from '../../redux/studentRelated/studentHandle';
 import { getAllTeachers } from '../../redux/teacherRelated/teacherHandle';
@@ -17,10 +14,9 @@ const AdminHomePage = () => {
     const { studentsList } = useSelector((state) => state.student);
     const { sclassesList } = useSelector((state) => state.sclass);
     const { teachersList } = useSelector((state) => state.teacher);
+    const { currentUser } = useSelector(state => state.user);
 
-    const { currentUser } = useSelector(state => state.user)
-
-    const adminID = currentUser._id
+    const adminID = currentUser._id;
 
     useEffect(() => {
         dispatch(getAllStudents(adminID));
@@ -33,73 +29,51 @@ const AdminHomePage = () => {
     const numberOfTeachers = teachersList && teachersList.length;
 
     return (
-        <>
-            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-                <Grid container spacing={3}>
-                    <Grid item xs={12} md={3} lg={3}>
-                        <StyledPaper>
-                            <img src={Students} alt="Students" />
-                            <Title>
-                                Total Students
-                            </Title>
-                            <Data start={0} end={numberOfStudents} duration={2.5} />
-                        </StyledPaper>
-                    </Grid>
-                    <Grid item xs={12} md={3} lg={3}>
-                        <StyledPaper>
-                            <img src={Classes} alt="Classes" />
-                            <Title>
-                                Total Classes
-                            </Title>
-                            <Data start={0} end={numberOfClasses} duration={5} />
-                        </StyledPaper>
-                    </Grid>
-                    <Grid item xs={12} md={3} lg={3}>
-                        <StyledPaper>
-                            <img src={Teachers} alt="Teachers" />
-                            <Title>
-                                Total Teachers
-                            </Title>
-                            <Data start={0} end={numberOfTeachers} duration={2.5} />
-                        </StyledPaper>
-                    </Grid>
-                    <Grid item xs={12} md={3} lg={3}>
-                        <StyledPaper>
-                            <img src={Fees} alt="Fees" />
-                            <Title>
-                                Fees Collection
-                            </Title>
-                            <Data start={0} end={23000} duration={2.5} prefix="$" />                        </StyledPaper>
-                    </Grid>
-                    <Grid item xs={12} md={12} lg={12}>
-                        <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                            <SeeNotice />
-                        </Paper>
-                    </Grid>
-                </Grid>
-            </Container>
-        </>
+        <div className="container mx-auto px-4 py-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Total Students Card */}
+                <div className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center justify-between text-center">
+                    <img src={Students} alt="Students" className="w-16 h-16 mb-4" />
+                    <h2 className="text-xl font-semibold">Total Students</h2>
+                    <CountUp
+                        start={0}
+                        end={numberOfStudents}
+                        duration={2.5}
+                        className="text-2xl md:text-3xl font-bold text-green-600"
+                    />
+                </div>
+
+                {/* Total Classes Card */}
+                <div className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center justify-between text-center">
+                    <img src={Classes} alt="Classes" className="w-16 h-16 mb-4" />
+                    <h2 className="text-xl font-semibold">Total Classes</h2>
+                    <CountUp
+                        start={0}
+                        end={numberOfClasses}
+                        duration={5}
+                        className="text-2xl md:text-3xl font-bold text-green-600"
+                    />
+                </div>
+
+                {/* Total Teachers Card */}
+                <div className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center justify-between text-center">
+                    <img src={Teachers} alt="Teachers" className="w-16 h-16 mb-4" />
+                    <h2 className="text-xl font-semibold">Total Teachers</h2>
+                    <CountUp
+                        start={0}
+                        end={numberOfTeachers}
+                        duration={2.5}
+                        className="text-2xl md:text-3xl font-bold text-green-600"
+                    />
+                </div>
+            </div>
+
+            {/* See Notice Section */}
+            <div className="mt-8 bg-white p-6 rounded-lg shadow-md">
+                <SeeNotice />
+            </div>
+        </div>
     );
 };
 
-
-const StyledPaper = styled(Paper)`
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  height: 200px;
-  justify-content: space-between;
-  align-items: center;
-  text-align: center;
-`;
-
-const Title = styled.p`
-  font-size: 1.25rem;
-`;
-
-const Data = styled(CountUp)`
-  font-size: calc(1.3rem + .6vw);
-  color: green;
-`;
-
-export default AdminHomePage
+export default AdminHomePage;
