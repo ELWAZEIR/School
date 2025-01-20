@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import { Schema, model } from "mongoose";
 
-const subjectSchema = new mongoose.Schema({
+const subjectSchema = new Schema({
     subName: {
         type: String,
         required: true,
@@ -14,18 +14,18 @@ const subjectSchema = new mongoose.Schema({
         required: true,
     },
     sclassName: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'sclass',
         required: true,
     },
     school: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'admin'
     },
     teacher: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'teacher',
     }
 }, { timestamps: true });
 
-module.exports = mongoose.model("subject", subjectSchema);
+export default model("subject", subjectSchema);

@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
 
-const studentSchema = new mongoose.Schema({
+const studentSchema = new Schema({
     name: {
         type: String,
         required: true
@@ -14,12 +14,12 @@ const studentSchema = new mongoose.Schema({
         required: true
     },
     sclassName: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'sclass',
         required: true,
     },
     school: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'admin',
         required: true,
     },
@@ -30,7 +30,7 @@ const studentSchema = new mongoose.Schema({
     examResult: [
         {
             subName: {
-                type: mongoose.Schema.Types.ObjectId,
+                type: Schema.Types.ObjectId,
                 ref: 'subject',
             },
             marksObtained: {
@@ -50,11 +50,11 @@ const studentSchema = new mongoose.Schema({
             required: true
         },
         subName: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: 'subject',
             required: true
         }
     }]
 });
 
-module.exports = mongoose.model("student", studentSchema);
+export default model("student", studentSchema);

@@ -1,15 +1,15 @@
-const mongoose = require("mongoose");
+import { Schema, model } from "mongoose";
 
-const sclassSchema = new mongoose.Schema({
+const sclassSchema = new Schema({
     sclassName: {
         type: String,
         required: true,
     },
     school: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'admin'
     },
 }, { timestamps: true });
 
-module.exports = mongoose.model("sclass", sclassSchema);
+export default model("sclass", sclassSchema);
 

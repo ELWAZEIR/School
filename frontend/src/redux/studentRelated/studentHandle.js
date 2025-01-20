@@ -11,7 +11,28 @@ export const getAllStudents = (id) => async (dispatch) => {
     dispatch(getRequest());
 
     try {
-        const result = await axios.get(`$http://localhost:5000/Students/${id}`);
+        const result = await axios.get(`http://localhost:5000/Students/${id}`);
+        console.log(result,"student result ");
+        
+        if (result.data.message) {
+            dispatch(getFailed(result.data.message));
+        } else {
+            dispatch(getSuccess(result.data));
+        }
+    } catch (error) {
+        dispatch(getError(error));
+    }
+}
+
+export const getStudentsNum = (id) => async (dispatch) => {
+    dispatch(getRequest());
+
+    try {
+        const result = await axios.get(`http://localhost:5000/StudentsCount`);
+        console.log(result,"student num result ");
+        console.log(result.data);
+        
+        
         if (result.data.message) {
             dispatch(getFailed(result.data.message));
         } else {

@@ -1,8 +1,8 @@
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
 
-const complainSchema = new mongoose.Schema({
+const complainSchema = new Schema({
     user: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'student',
         required: true
     },
@@ -15,10 +15,10 @@ const complainSchema = new mongoose.Schema({
         required: true
     },
     school: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'admin',
         required: true,
     }
 });
 
-module.exports = mongoose.model("complain", complainSchema);
+export default model("complain", complainSchema);

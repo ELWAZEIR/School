@@ -16,7 +16,9 @@ export const getAllSclasses = (id, address) => async (dispatch) => {
     dispatch(getRequest());
 
     try {
-        const result = await axios.get(`http://localhost:5000/${address}List/${id}`);
+        const result = await axios.get(`http://localhost:5000/SclassList/${id}`);
+        console.log(result,"getAllSclasses");
+        
         if (result.data.message) {
             dispatch(getFailedTwo(result.data.message));
         } else {
@@ -31,9 +33,11 @@ export const getClassStudents = (id) => async (dispatch) => {
     dispatch(getRequest());
 
     try {
-        const result = await axios.get(`${process.env.REACT_APP_BASE_URL}/Sclass/Students/${id}`);
+        const result = await axios.get(`http://localhost:5000/Students/${id}`);
+
         if (result.data.message) {
             dispatch(getFailedTwo(result.data.message));
+            
         } else {
             dispatch(getStudentsSuccess(result.data));
         }
@@ -46,7 +50,7 @@ export const getClassDetails = (id, address) => async (dispatch) => {
     dispatch(getRequest());
 
     try {
-        const result = await axios.get(`${process.env.REACT_APP_BASE_URL}/${address}/${id}`);
+        const result = await axios.get(`${process.env.REACT_APP_BASE_URL}/Sclass/${id}`);
         if (result.data) {
             dispatch(detailsSuccess(result.data));
         }
@@ -59,7 +63,7 @@ export const getSubjectList = (id, address) => async (dispatch) => {
     dispatch(getRequest());
 
     try {
-        const result = await axios.get(`${process.env.REACT_APP_BASE_URL}/${address}/${id}`);
+        const result = await axios.get(`${process.env.REACT_APP_BASE_URL}/AllSubjects/${id}`);
         if (result.data.message) {
             dispatch(getFailed(result.data.message));
         } else {

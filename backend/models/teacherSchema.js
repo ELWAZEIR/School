@@ -1,6 +1,6 @@
-const mongoose = require("mongoose")
+import { Schema, model } from "mongoose";
 
-const teacherSchema = new mongoose.Schema({
+const teacherSchema = new Schema({
     name: {
         type: String,
         required: true,
@@ -19,16 +19,16 @@ const teacherSchema = new mongoose.Schema({
         default: "Teacher"
     },
     school: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'admin',
         required: true,
     },
     teachSubject: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'subject',
     },
     teachSclass: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'sclass',
         required: true,
     },
@@ -46,4 +46,4 @@ const teacherSchema = new mongoose.Schema({
     }]
 }, { timestamps: true });
 
-module.exports = mongoose.model("teacher", teacherSchema)
+export default model("teacher", teacherSchema)
