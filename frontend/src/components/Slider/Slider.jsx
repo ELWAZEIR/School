@@ -52,7 +52,7 @@ function Slider() {
     setActiveSlide(index);
   };
   return (<>
-    <div className="relative h-[600px] overflow-hidden">
+    <div className="relative mt-16 h-[600px] overflow-hidden">
             {slides.map((slide, index) => (
               <div
                 key={slide.id}

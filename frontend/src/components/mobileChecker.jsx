@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 const [isMobile, setIsMobile] = useState(false);
 
 useEffect(() => {
