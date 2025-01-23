@@ -28,12 +28,12 @@ const AdminHomePage = () => {
         dispatch(getAllTeachers(adminID));
     }, [adminID, dispatch]);
 
-    console.log(studentsList,"studentsList");
+    // console.log(studentsList,"studentsList");
     
     const numberOfStudents = studentsList && studentsList.length;
     const numberOfClasses = sclassesList && sclassesList.length;
     const numberOfTeachers = teachersList && teachersList.length;
-    console.log(numberOfStudents,"stdent");
+    // console.log(numberOfStudents,"stdent");
 
     
 

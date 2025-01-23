@@ -59,7 +59,7 @@ export const getStudents = async (req, res) => {
     try {
         
         let students = await Student.find({ sclassName: req.params.id }).populate("sclassName", "sclassName");
-        console.log(students);
+        // console.log(students);
         
         if (students.length > 0) {
             let modifiedStudents = students.map((student) => {
