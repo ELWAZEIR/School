@@ -10,7 +10,8 @@ import {
 
 export const getAllTeachers = (id) => async (dispatch) => {
     dispatch(getRequest());
-
+    console.log("fetch techer");
+    
     try {
         const result = await axios.get(`http://localhost:5000/Teachers/${id}`);
         if (result.data.message) {

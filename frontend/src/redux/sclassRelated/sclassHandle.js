@@ -17,7 +17,7 @@ export const getAllSclasses = (id, address) => async (dispatch) => {
 
     try {
         const result = await axios.get(`http://localhost:5000/SclassList/${id}`);
-        console.log(result,"getAllSclasses");
+        // console.log(result,"getAllSclasses");
         
         if (result.data.message) {
             dispatch(getFailedTwo(result.data.message));
@@ -49,6 +49,7 @@ export const getClassStudents = (id) => async (dispatch) => {
 export const getClassDetails = (id, address) => async (dispatch) => {
     dispatch(getRequest());
 
+    
     try {
         const result = await axios.get(`${process.env.REACT_APP_BASE_URL}/Sclass/${id}`);
         if (result.data) {

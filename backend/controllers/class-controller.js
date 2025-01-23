@@ -39,8 +39,7 @@ export const sclassList = async (req, res) => {
 };
 
 export const getSclassDetail = async (req, res) => {
-    try {
-        
+    try {       
         let sclass = await Sclass.findById(req.params.id);
         if (sclass) {
             res.send(sclass);
@@ -60,7 +59,7 @@ export const getSclassStudents = async (req, res) => {
         let students = await Sclass.find(
             { _id: req.params.id }
         )
-        console.log(students);
+        // console.log(students);
         
         if (students.length > 0) {
             let modifiedStudents = students.map((student) => {
