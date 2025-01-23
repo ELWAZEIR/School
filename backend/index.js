@@ -25,6 +25,6 @@ connect(url)
     .catch((err) => console.error("NOT CONNECTED TO NETWORK".bgBrightRed, err));
 app.use('/', Routes);
 
-app.listen(PORT, () => {
-    console.log(`Server started at port ${PORT}`.random)
-})
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server started at port ${PORT}`.random);
+});
