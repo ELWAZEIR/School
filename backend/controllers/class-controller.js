@@ -58,9 +58,7 @@ export const getSclassStudents = async (req, res) => {
         
         let students = await Sclass.find(
             { _id: req.params.id }
-        )
-        // console.log(students);
-        
+        )        
         if (students.length > 0) {
             let modifiedStudents = students.map((student) => {
                 return { ...student._doc, password: undefined };
@@ -82,10 +80,6 @@ export const deleteSclass = async (req, res) => {
         }
 
         res.status(200).json({message:"class deleted successfully"})
-        // const deletedStudents = await studentSchema.deleteMany({ sclassName: req.params.id });
-        // const deletedSubjects = await Sclass.deleteMany({ sclassName: req.params.id });
-        // const deletedTeachers = await teacherSchema.deleteMany({ teachSclass: req.params.id });
-        // res.send(deletedClass);
     } catch (error) {
         res.status(500).json(error);
     }
@@ -97,9 +91,6 @@ export const deleteSclasses = async (req, res) => {
         if (deletedClasses.deletedCount === 0) {
             return res.send({ message: "No classes found to delete" });
         }
-        const deletedStudents = await _deleteMany({ school: req.params.id });
-        const deletedSubjects = await __deleteMany({ school: req.params.id });
-        const deletedTeachers = await ___deleteMany({ school: req.params.id });
         res.send(deletedClasses);
     } catch (error) {
         res.status(500).json(error);
