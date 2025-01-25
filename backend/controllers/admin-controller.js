@@ -55,14 +55,14 @@ import Complain from '../models/complainSchema.js';
 //     }
 // };
 
-export const adminRegister = async (req, res) => {
+const adminRegister = async (req, res) => {
     try {
         const admin = new Admin({
             ...req.body
         });
 
-        const existingAdminByEmail = await Admin.findOne({ email: req.body.email });
-        const existingSchool = await Admin.findOne({ schoolName: req.body.schoolName });
+        const existingAdminByEmail = await findOne({ email: req.body.email });
+        const existingSchool = await findOne({ schoolName: req.body.schoolName });
 
         if (existingAdminByEmail) {
             res.send({ message: 'Email already exists' });
@@ -80,9 +80,9 @@ export const adminRegister = async (req, res) => {
     }
 };
 
-export const adminLogIn = async (req, res) => {
+const adminLogIn = async (req, res) => {
     if (req.body.email && req.body.password) {
-        let admin = await Admin.findOne({ email: req.body.email });
+        let admin = await findOne({ email: req.body.email });
         if (admin) {
             if (req.body.password === admin.password) {
                 admin.password = undefined;
@@ -98,9 +98,9 @@ export const adminLogIn = async (req, res) => {
     }
 };
 
-export const getAdminDetail = async (req, res) => {
+const getAdminDetail = async (req, res) => {
     try {
-        let admin = await Admin.findById(req.params.id);
+        let admin = await findById(req.params.id);
         if (admin) {
             admin.password = undefined;
             res.send(admin);
@@ -149,3 +149,4 @@ export const getAdminDetail = async (req, res) => {
 
 // module.exports = { adminRegister, adminLogIn, getAdminDetail, deleteAdmin, updateAdmin };
 
+export default { adminRegister, adminLogIn, getAdminDetail };
